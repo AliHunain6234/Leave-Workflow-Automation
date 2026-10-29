@@ -42,18 +42,20 @@ employees = [
 for emp in employees:
     add_employee(*emp)
 
-# Login users. No password is written in the code: set it in .env (SEED_PASSWORD_HR, ...) or a random one is
+# Login users. No username or password is written in the code: set them in .env (SEED_USER_HR, SEED_PASSWORD_HR, ...) or a random one is
 # generated and printed once at the end. Only the hash is stored in MongoDB (see add_user).
 load_dotenv()
+#   (usernames: env var, default; password: env var; role; display name; employee id; supervisor)
 users = [
-    ("hr@intellihr.com", "SEED_PASSWORD_HR", "hr", "HR Manager", None, None),
-    ("supervisor@intellihr.com", "SEED_PASSWORD_SUPERVISOR", "supervisor", "Principal", None, "Principal"),
-    ("aliahmad@intellihr.com", "SEED_PASSWORD_ALI", "employee", "Ali Ahmad", 1, "Principal"),
-    ("sara@intellihr.com", "SEED_PASSWORD_SARA", "employee", "Sara Khan", 2, "Principal"),
+    ("SEED_USER_HR", "hr@example.com", "SEED_PASSWORD_HR", "hr", "HR Manager", None, None),
+    ("SEED_USER_SUPERVISOR", "supervisor@example.com", "SEED_PASSWORD_SUPERVISOR", "supervisor", "Principal", None, "Principal"),
+    ("SEED_USER_EMPLOYEE1", "employee1@example.com", "SEED_PASSWORD_EMPLOYEE1", "employee", "Ali Ahmad", 1, "Principal"),
+    ("SEED_USER_EMPLOYEE2", "employee2@example.com", "SEED_PASSWORD_EMPLOYEE2", "employee", "Sara Khan", 2, "Principal"),
 ]
 generated = []
-for username, env_name, role, name, employee_id, supervisor_name in users:
-    password = os.getenv(env_name, "").strip()
+for user_env, user_default, pass_env, role, name, employee_id, supervisor_name in users:
+    username = os.getenv(user_env, "").strip() or user_default
+    password = os.getenv(pass_env, "").strip()
     if not password:
         password = secrets.token_urlsafe(9)
         generated.append((username, password))
