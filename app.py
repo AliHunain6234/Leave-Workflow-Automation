@@ -1,7 +1,3 @@
-import os
-import secrets
-
-from dotenv import load_dotenv
 from flask import Flask, request, render_template_string, redirect, session, url_for, send_from_directory
 from graph import leave_graph
 from mongo_database import (
@@ -12,9 +8,7 @@ from mongo_database import (
 )
 
 app = Flask(__name__)
-# No key in the source code: SECRET_KEY from .env, else a random one for this run (logins reset on restart).
-load_dotenv()
-app.secret_key = os.getenv("SECRET_KEY", "").strip() or secrets.token_hex(32)
+app.secret_key = "change-me-to-a-long-random-secret"  # Demo key. Use ENV secret in production.
 
 
 def current_user():

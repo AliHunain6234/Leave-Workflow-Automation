@@ -1,9 +1,6 @@
-import hmac
-
 from pymongo import MongoClient
 from datetime import datetime
 from bson import ObjectId
-from werkzeug.security import check_password_hash, generate_password_hash
 
 client = MongoClient("mongodb://localhost:27017/")
 db = client["hr_leave_system"]
@@ -53,7 +50,7 @@ def add_user(username, password, role, name, employee_id=None, supervisor_name=N
         {"username": username},
         {"$set": {
             "username": username,
-            "password": generate_password_hash(password),  # only the hash is stored, never the password
+            "password": password,  # Demo only. For production use password hashing.
             "role": role,          # employee / supervisor / hr
             "name": name,
             "employee_id": employee_id,
@@ -64,23 +61,10 @@ def add_user(username, password, role, name, employee_id=None, supervisor_name=N
 
 
 def authenticate_user(username, password):
-    """The user document when the password is right, else None.
-
-    Accounts created before passwords were hashed still hold plain text; they are accepted once and
-    upgraded to a hash on that first successful login.
-    """
-    if not isinstance(username, str) or not isinstance(password, str):
-        return None
-    user = users_collection.find_one({"username": username})
-    if not user:
-        return None
-    stored = user.get("password") or ""
-    if stored.startswith(("scrypt:", "pbkdf2:")):
-        return user if check_password_hash(stored, password) else None
-    if hmac.compare_digest(stored.encode(), password.encode()):
-        users_collection.update_one({"_id": user["_id"]}, {"$set": {"password": generate_password_hash(password)}})
-        return user
-    return None
+    return users_collection.find_one({
+        "username": username,
+        "password": password
+    })
 
 
 def save_leave_request(employee_id, employee_name, department, leave_type, days, reason, status, recommendation, explanation):
