@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HR Dashboard</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<nav>
+    <a href="/" class="brand-area">
+        <div class="logo">HR</div>
+        <div class="company-name">IntelliHR Automations</div>
+        <div class="user-profile">
+    👤 {{ user.name }}
+</div>
+    </a>
+    <div class="nav-links">
+        <a href="/add-employee">Employees</a>
+        <a href="/analytics">Analytics</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+
+<section class="page">
+    <h1 class="typing-title">HR Final Approval Dashboard</h1>
+    <p class="welcome-user">
+    Welcome, {{ user.name }}
+</p>
+    <p class="subtitle">Welcome {{ user.name }}. Make final HR decision after supervisor recommendation.</p>
+    
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>Employees</h3>
+        <span>{{ employees|length }}</span>
+    </div>
+
+    <div class="stat-card">
+        <h3>Pending HR</h3>
+        <span>{{ pending_hr_requests|length }}</span>
+    </div>
+
+    <div class="stat-card">
+        <h3>Total Requests</h3>
+        <span>{{ requests|length }}</span>
+    </div>
+
+    <div class="stat-card">
+        <h3>System</h3>
+        <span>AI</span>
+    </div>
+</div>
+
+    <div class="history">
+        <h2>Pending HR Decisions</h2>
+        <table>
+            <tr>
+                <th>Employee</th>
+                <th>Supervisor</th>
+                <th>Type</th>
+                <th>Days</th>
+                <th>Status</th>
+                <th>AI Explanation</th>
+                <th>Action</th>
+            </tr>
+            {% for r in pending_hr_requests %}
+            <tr>
+                <td>{{ r.employee_name }}</td>
+                <td>{{ r.supervisor }}</td>
+                <td>{{ r.leave_type }}</td>
+                <td>{{ r.days }}</td>
+                <td>{{ r.status }}</td>
+                <td>{{ r.explanation }}</td>
+                <td>
+                    <form action="/hr-decision/{{ r.id }}/accept" method="POST">
+                        <button type="submit">Final Accept</button>
+                    </form>
+                    <form action="/hr-decision/{{ r.id }}/reject" method="POST">
+                        <button class="delete-btn" type="submit">Final Reject</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="history">
+        <h2>All Leave Requests</h2>
+        <table>
+            <tr>
+                <th>Employee</th>
+                <th>Department</th>
+                <th>Type</th>
+                <th>Days</th>
+                <th>Status</th>
+                <th>Old Balance</th>
+                <th>Remaining</th>
+            </tr>
+            {% for r in requests %}
+            <tr>
+                <td>{{ r.employee_name }}</td>
+                <td>{{ r.department }}</td>
+                <td>{{ r.leave_type }}</td>
+                <td>{{ r.days }}</td>
+                <td>{{ r.status }}</td>
+                <td>{{ r.old_balance }}</td>
+                <td>{{ r.remaining_balance }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</section>
+</body>
+</html>

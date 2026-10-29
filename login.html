@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - IntelliHR</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<nav>
+    <a href="/" class="brand-area">
+        <div class="logo">HR</div>
+        <div class="company-name">IntelliHR Automations</div>
+    </a>
+</nav>
+
+<section class="page">
+    <h1>Login</h1>
+    <p class="subtitle">Role-based access for Employee, Supervisor and HR.</p>
+
+    {% if message %}
+    <div class="success-message" style="background:#ef4444;">{{ message }}</div>
+    {% endif %}
+
+    <form action="/login" method="POST" class="form employee-form">
+        <label>Username</label>
+        <input type="text" name="username" required>
+
+        <label>Password</label>
+        <input type="password" name="password" required>
+
+        <button type="submit" class="login-btn">Login</button>
+    </form>
+    
+</section>
+</body>
+</html>

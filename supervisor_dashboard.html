@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Supervisor Dashboard</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<nav>
+    <a href="/" class="brand-area">
+        <div class="logo">HR</div>
+        <div class="company-name">IntelliHR Automations</div>
+        <div class="user-profile">
+    👤 {{ user.name }}
+</div>
+    </a>
+    <div class="nav-links">
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+
+<section class="page">
+    <h1 class="typing-title">Supervisor Approval Dashboard</h1>
+    <p class="welcome-user">
+    Welcome, {{ user.name }}
+</p>
+    <p class="subtitle">Welcome {{ user.name }}. Review employee leave requests and forward recommendation to HR.</p>
+
+    <div class="history">
+        <table>
+            <tr>
+                <th>Employee</th>
+                <th>Department</th>
+                <th>Type</th>
+                <th>Days</th>
+                <th>Reason</th>
+                <th>AI Recommendation</th>
+                <th>Action</th>
+            </tr>
+            {% for r in pending_requests %}
+            <tr>
+                <td>{{ r.employee_name }}</td>
+                <td>{{ r.department }}</td>
+                <td>{{ r.leave_type }}</td>
+                <td>{{ r.days }}</td>
+                <td>{{ r.reason }}</td>
+                <td>{{ r.recommendation }}</td>
+                <td>
+                    <form action="/supervisor-decision/{{ r.id }}/recommend" method="POST">
+                        <button type="submit">Recommend</button>
+                    </form>
+                    <form action="/supervisor-decision/{{ r.id }}/reject" method="POST">
+                        <button class="delete-btn" type="submit">Reject</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Employee</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<nav>
+    <a href="/" class="brand-area">
+        <div class="logo">HR</div>
+        <div class="company-name">IntelliHR Automations</div>
+        <div class="user-profile">
+    👤 {{ user.name }}
+</div>
+    </a>
+    <div class="nav-links">
+        <a href="/hr-dashboard">HR Dashboard</a>
+        <a href="/analytics">Analytics</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+
+<section class="page">
+
+    <h1>Add New Employee</h1>
+    <p class="subtitle">Enter employee details. Data will be stored in MongoDB.</p>
+
+    {% if message %}
+    <div class="success-message">{{ message }}</div>
+    {% endif %}
+
+    <form action="/save-employee" method="POST" class="form employee-form">
+
+        <label>Employee ID</label>
+        <input type="number" name="employee_id" min="1" required>
+
+        <label>Employee Name</label>
+        <input type="text" name="name" required>
+
+        <label>Department</label>
+        <input type="text" name="department" required>
+
+        <label>Leave Balance</label>
+        <input type="number" name="leave_balance" min="0" required>
+
+        <label>Supervisor</label>
+        <select name="supervisor" required>
+            <option>Admin Officer</option>
+            <option>Principal</option>
+            <option>Warden</option>
+            <option>Finance Manager</option>
+            <option>IT Manager</option>
+            <option>HR Manager</option>
+            <option>Librarian</option>
+            <option>Transport Manager</option>
+            <option>Controller Exams</option>
+            <option>Security Officer</option>
+            <option>Admissions Officer</option>
+            <option>Procurement Officer</option>
+            <option>Student Affairs Head</option>
+            <option>Maintenance Officer</option>
+        </select>
+
+        <button type="submit">Save Employee</button>
+
+    </form>
+
+<section class="history">
+    <h2>Employee Database</h2>
+
+    <table>
+        <tr>
+            <th>Employee ID</th>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Leave Balance</th>
+            <th>Supervisor</th>
+            <th>Action</th>
+        </tr>
+
+        {% for e in employees %}
+        <tr>
+            <td>{{ e.employee_id }}</td>
+            <td>{{ e.name }}</td>
+            <td>{{ e.department }}</td>
+            <td>{{ e.leave_balance }}</td>
+            <td>{{ e.supervisor }}</td>
+            <td>
+                <form action="/delete-employee/{{ e.employee_id }}" method="POST">
+                    <button class="delete-btn" type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+
+</section>
+
+</body>
+</html>

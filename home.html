@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IntelliHR Automations</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<nav>
+    <a href="/" class="brand-area">
+        <div class="logo">HR</div>
+        <div class="company-name">IntelliHR Automations</div>
+    </a>
+    <div class="nav-links">
+    {% if user %}
+        <a href="/logout">Logout</a>
+    {% else %}
+        <a href="/login" class="nav-login-btn">Login</a>
+    {% endif %}
+</div>
+</nav>
+
+<section class="home-section">
+
+    <div class="home-left">
+        <div class="badge">AI POWERED BUSINESS PROCESS AUTOMATION</div>
+
+        <h1>Intelligent HR Leave Workflow</h1>
+
+        <p>
+            A futuristic HR automation platform using OpenAI, LangGraph,
+            Flask and MongoDB to automate leave recommendations with
+            human approval.
+        </p>
+    </div>
+
+    <div class="home-image">
+        <img src="AI Brain.jpg" alt="AI Brain">
+    </div>
+
+</section>
+
+<section class="cards-row">
+    <a href="/about" class="floating-card">
+        <h2>About</h2>
+        <p>Learn about IntelliHR Automations.</p>
+    </a>
+
+    <a href="/services" class="floating-card">
+        <h2>Services</h2>
+        <p>Explore AI-powered HR automation services.</p>
+    </a>
+
+    <a href="/contact" class="floating-card">
+        <h2>Contact Us</h2>
+        <p>Get in touch with IntelliHR Automations.</p>
+    </a>
+</section>
+</body>
+</html>
