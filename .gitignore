@@ -1,0 +1,8 @@
+venv/
+.venv/
+__pycache__/
+*.pyc
+.vscode/
+
+# secrets: holds the OpenAI key and the MongoDB connection string
+.env

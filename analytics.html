@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analytics Dashboard</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<nav>
+    <a href="/" class="brand-area">
+        <div class="logo">HR</div>
+        <div class="company-name">IntelliHR Automations</div>
+        <div class="user-profile">
+    👤 {{ user.name }}
+</div>
+    </a>
+    <div class="nav-links">
+        <a href="/hr-dashboard">HR Dashboard</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+
+<section class="page">
+    <h1>HR Analytics Dashboard</h1>
+    <p class="subtitle">Visual summary of leave decisions and employee workflow activity.</p>
+
+    <div class="cards">
+        <div class="card"><h3>Total Employees</h3><p style="font-size:34px;">{{ analytics.total_employees }}</p></div>
+        <div class="card"><h3>Total Requests</h3><p style="font-size:34px;">{{ analytics.total_requests }}</p></div>
+        <div class="card"><h3>Accepted</h3><p style="font-size:34px;">{{ analytics.accepted }}</p></div>
+        <div class="card"><h3>Rejected</h3><p style="font-size:34px;">{{ analytics.rejected }}</p></div>
+        <div class="card"><h3>Pending</h3><p style="font-size:34px;">{{ analytics.pending }}</p></div>
+    </div>
+
+    <div class="history">
+        <h2>Department-wise Leave Requests</h2>
+        {% for d in analytics.departments %}
+            <p><b>{{ d._id }}</b> — {{ d.count }} requests</p>
+           <div class="analytics-bar"></div>
+        {% endfor %}
+    </div>
+
+    <div class="history">
+        <h2>Leave Type Trend</h2>
+        {% for t in analytics.leave_types %}
+            <p><b>{{ t._id }}</b> — {{ t.count }} requests</p>
+           <div class="analytics-bar"></div>
+        {% endfor %}
+    </div>
+</section>
+</body>
+</html>

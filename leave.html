@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HR Leave Workflow</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<div class="background">
+    <div class="circle one"></div>
+    <div class="circle two"></div>
+    <div class="circle three"></div>
+</div>
+
+<nav>
+    <a href="/" class="brand-area">
+        <div class="logo">HR</div>
+        <div class="company-name">IntelliHR Automations</div>
+        <div class="user-profile">
+    👤 {{ user.name }}
+</div>
+    </a>
+    <div class="nav-links">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+
+<div class="layout">
+
+    <aside class="sidebar">
+        <h2>Workflow Engine</h2>
+        <div class="workflow">
+            <div>Employee Request</div>
+            <div>Leave Type Policy</div>
+            <div>AI Recommendation</div>
+            <div>Supervisor Review</div>
+            <div>HR Final Decision</div>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="badge">HUMAN-IN-THE-LOOP AI WORKFLOW</div>
+        <h1>Smart Leave Decision System</h1>
+        <p class="welcome-user">
+    Welcome, {{ user.name }}
+</p>
+
+        {% if message %}
+        <div class="success-message">{{ message }}</div>
+        {% endif %}
+
+        <form action="/apply-leave" method="POST" class="form">
+            {% if user.role != "employee" %}
+            <label>Employee ID</label>
+            <input type="number" name="employee_id" required>
+            {% else %}
+            <p class="subtitle"><b>Logged in as:</b> {{ user.name }} | Employee ID: {{ user.employee_id }}</p>
+            {% endif %}
+
+            <label>Leave Type</label>
+            <select name="leave_type" required>
+                <option>Casual Leave</option>
+                <option>Sick Leave</option>
+                <option>Annual Leave</option>
+                <option>Emergency Leave</option>
+                <option>Maternity/Paternity Leave</option>
+            </select>
+
+            <label>Leave Days</label>
+            <input type="number" name="days" required>
+
+            <label>Reason</label>
+            <textarea name="reason" required></textarea>
+
+            <button type="submit">Submit Leave Request</button>
+        </form>
+    </main>
+
+    <section class="panel">
+        <h2>AI Decision Support Panel</h2>
+
+        {% if result %}
+            {% if result.status == "Rejected by HR" %}
+                <div class="rejected">REJECTED BY POLICY</div>
+            {% else %}
+                <div class="accepted">SENT TO SUPERVISOR</div>
+            {% endif %}
+
+            <div class="result">
+                <p><b>Employee:</b> {{ result.employee_name }}</p>
+                <p><b>Department:</b> {{ result.department }}</p>
+                <p><b>Leave Type:</b> {{ result.leave_type }}</p>
+                <p><b>Leave Balance:</b> {{ result.leave_balance }}</p>
+                <p><b>Supervisor:</b> {{ result.supervisor }}</p>
+                <p><b>Status:</b> {{ result.status }}</p>
+
+                <hr>
+                <h3>AI Recommendation</h3>
+                <p>{{ result.recommendation }}</p>
+
+                <hr>
+                <h3>Why this decision?</h3>
+                <p>{{ result.explanation }}</p>
+            </div>
+        {% else %}
+            <div class="waiting">
+                <div class="scanner"></div>
+                <h3>Waiting for Request</h3>
+                <p>Submit a leave application.</p>
+            </div>
+        {% endif %}
+    </section>
+</div>
+
+<section class="history">
+    <h2>My / All Leave Request History</h2>
+    <table>
+        <tr>
+            <th>Employee</th>
+            <th>Department</th>
+            <th>Type</th>
+            <th>Days</th>
+            <th>Status</th>
+            <th>Old Balance</th>
+            <th>Remaining</th>
+        </tr>
+        {% for r in requests %}
+        <tr>
+            <td>{{ r.employee_name }}</td>
+            <td>{{ r.department }}</td>
+            <td>{{ r.leave_type }}</td>
+            <td>{{ r.days }}</td>
+            <td>{{ r.status }}</td>
+            <td>{{ r.old_balance }}</td>
+            <td>{{ r.remaining_balance }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+
+</body>
+</html>

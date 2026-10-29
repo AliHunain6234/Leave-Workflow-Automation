@@ -1,0 +1,8 @@
+flask
+python-dotenv
+langgraph
+langchain
+langchain-openai
+openai
+pymongo
+dnspython
