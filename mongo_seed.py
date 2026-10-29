@@ -1,4 +1,9 @@
-from mongo_database import employees_collection,leave_requests_collection, users_collection, add_employee
+import os
+import secrets
+
+from dotenv import load_dotenv
+
+from mongo_database import employees_collection,leave_requests_collection, users_collection, add_employee, add_user
 
 # Old data clear
 employees_collection.delete_many({})
@@ -37,39 +42,27 @@ employees = [
 for emp in employees:
     add_employee(*emp)
 
-# Login users
-users_collection.insert_many([
-    {
-        "username": "hr@intellihr.com",
-        "password": "Hr@2026",
-        "role": "hr",
-        "name": "HR Manager"
-    },
-    {
-        "username": "supervisor@intellihr.com",
-        "password": "Sup@2026",
-        "role": "supervisor",
-        "name": "Principal",
-        "supervisor_name": "Principal"
-    },
-    {
-        "username": "aliahmad@intellihr.com",
-        "password": "Ali@2026",
-        "role": "employee",
-        "name": "Ali Ahmad",
-        "employee_id": 1,
-        "supervisor_name": "Principal"
-    },
-    {
-        "username": "sara@intellihr.com",
-        "password": "Sara@2026",
-        "role": "employee",
-        "name": "Sara Khan",
-        "employee_id": 2,
-        "supervisor_name": "Principal"
-    }
-])
+# Login users. No password is written in the code: set it in .env (SEED_PASSWORD_HR, ...) or a random one is
+# generated and printed once at the end. Only the hash is stored in MongoDB (see add_user).
+load_dotenv()
+users = [
+    ("hr@intellihr.com", "SEED_PASSWORD_HR", "hr", "HR Manager", None, None),
+    ("supervisor@intellihr.com", "SEED_PASSWORD_SUPERVISOR", "supervisor", "Principal", None, "Principal"),
+    ("aliahmad@intellihr.com", "SEED_PASSWORD_ALI", "employee", "Ali Ahmad", 1, "Principal"),
+    ("sara@intellihr.com", "SEED_PASSWORD_SARA", "employee", "Sara Khan", 2, "Principal"),
+]
+generated = []
+for username, env_name, role, name, employee_id, supervisor_name in users:
+    password = os.getenv(env_name, "").strip()
+    if not password:
+        password = secrets.token_urlsafe(9)
+        generated.append((username, password))
+    add_user(username, password, role, name, employee_id, supervisor_name)
 
 print("MongoDB seeded successfully.")
 print("25 employees added.")
-print("Login users added.")
+print("Login users added (passwords stored as hashes).")
+if generated:
+    print("Generated passwords, shown only now. Save them or set SEED_PASSWORD_* in .env and seed again:")
+    for username, password in generated:
+        print(f"  {username}  {password}")
