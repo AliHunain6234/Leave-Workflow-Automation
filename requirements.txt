@@ -6,3 +6,4 @@ langchain-openai
 openai
 pymongo
 dnspython
+gunicorn

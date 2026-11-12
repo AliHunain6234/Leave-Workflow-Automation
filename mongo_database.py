@@ -1,8 +1,13 @@
+import os
+from dotenv import load_dotenv
 from pymongo import MongoClient
 from datetime import datetime
 from bson import ObjectId
 
-client = MongoClient("mongodb://localhost:27017/")
+load_dotenv()
+
+# Hosting par MONGO_URI (MongoDB Atlas) use hoga; set na ho to local MongoDB.
+client = MongoClient(os.getenv("MONGO_URI", "mongodb://localhost:27017/"))
 db = client["hr_leave_system"]
 
 employees_collection = db["employees"]

@@ -45,7 +45,7 @@ Python, Flask, LangGraph, LangChain + OpenAI (`gpt-4o-mini`), MongoDB (`pymongo`
 
 ## Run it
 
-You need Python 3.10+ and a MongoDB server running on `localhost:27017` (the database name is `hr_leave_system`).
+You need Python 3.10+ and a MongoDB server (the database name is `hr_leave_system`): either one running on `localhost:27017`, or a MongoDB Atlas cluster whose connection string you put in `MONGO_URI`.
 
 ```bash
 python -m venv venv
@@ -57,16 +57,27 @@ Create a `.env` file next to `app.py`:
 
 ```text
 OPENAI_API_KEY=your-openai-key
+MONGO_URI=your-mongodb-connection-string
 ```
 
-The key is optional: without it the workflow still runs and uses the fallback recommendation text.
+Both are optional: without the key the workflow still runs and uses the fallback recommendation text, and without `MONGO_URI` the app connects to `localhost:27017`.
 
 ```bash
 python mongo_seed.py           # WARNING: clears the employees, requests and users collections, then adds 25 employees and 4 demo logins
 python app.py                  # http://127.0.0.1:5500
 ```
 
-The demo accounts (HR, supervisor and two employees) are defined at the bottom of `mongo_seed.py`. `python mongo_test.py` checks the MongoDB connection.
+The demo accounts (HR, supervisor and two employees) are defined at the bottom of `mongo_seed.py`. `python mongo_test.py` checks the local MongoDB connection.
+
+## Deploy it
+
+GitHub Pages cannot run this app (it only serves static files). Use a Python host such as Render:
+
+- Build command: `pip install -r requirements.txt`
+- Start command: `gunicorn app:app`
+- Environment variables: `MONGO_URI` (MongoDB Atlas), `OPENAI_API_KEY`, `SECRET_KEY` (any long random text)
+
+In MongoDB Atlas, allow access from anywhere (`0.0.0.0/0`) under Network Access, then run `python mongo_seed.py` once with the same `MONGO_URI` to add the demo data.
 
 ## Project layout
 
@@ -81,6 +92,5 @@ The demo accounts (HR, supervisor and two employees) are defined at the bottom o
 
 ## Status and limitations
 
-- This is a **demo-grade** project. Passwords are stored as plain text in MongoDB and the Flask secret key in `app.py` is a placeholder; do not deploy it as it is.
-- The MongoDB address is fixed to `localhost` in `mongo_database.py`.
+- This is a **demo-grade** project. Passwords are stored as plain text in MongoDB and the Flask secret key in `app.py` falls back to a placeholder unless `SECRET_KEY` is set; treat any deployment as a demo.
 - The AI recommendation is advice only; the policy rules and the human decisions are what change a request's status.

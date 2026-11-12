@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, render_template_string, redirect, session, url_for, send_from_directory
 from graph import leave_graph
 from mongo_database import (
@@ -8,7 +9,8 @@ from mongo_database import (
 )
 
 app = Flask(__name__)
-app.secret_key = "change-me-to-a-long-random-secret"  # Demo key. Use ENV secret in production.
+# Hosting par SECRET_KEY env variable set karein; warna demo key use hogi.
+app.secret_key = os.getenv("SECRET_KEY", "change-me-to-a-long-random-secret")
 
 
 def current_user():
@@ -241,4 +243,5 @@ def delete_employee_route(employee_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5500)
+    # Local run: port 5500. Hosting (Render) gunicorn se chalata hai aur PORT khud deta hai.
+    app.run(debug=True, port=int(os.getenv("PORT", 5500)))
